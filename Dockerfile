@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:saucy
 MAINTAINER Carlos Kazuo, ninetails.nine@gmail.com
 
 RUN apt-get update
