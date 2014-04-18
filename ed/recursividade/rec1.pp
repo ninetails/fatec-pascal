@@ -1,0 +1,25 @@
+PROGRAM REC1;
+
+TYPE
+  ARRAYINT = ARRAY[1..100] OF INTEGER;
+
+PROCEDURE INIT(A:ARRAYINT);
+VAR I:INTEGER;
+BEGIN
+  I := 0;
+  REPEAT
+    A[I] = I;
+    I := I + 1;
+  UNTIL(I < 100);
+END;
+
+VAR A:ARRAYINT;
+VAR I:INTEGER;
+BEGIN
+  INIT(A);
+  I := 0;
+  REPEAT
+    WRITELN(A[I]);
+    I := I + 1;
+  UNTIL(I < 10);
+END.
