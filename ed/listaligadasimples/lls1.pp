@@ -1,5 +1,5 @@
 program lls1;
-uses crt, sysutils;
+uses crt;
 
 type
   tPtNode = ^tNode;
@@ -11,7 +11,7 @@ type
 
 
 
-procedure printMenu();
+procedure printMenu;
 begin
   writeln('==================================================');
   writeln('MENU PRINCIPAL');
@@ -71,9 +71,9 @@ begin
     begin
       if p^.nome = nome then
         begin
-          writeln('Informe o novo nome ou redigite o antigo (', p^.nome, '):');
+          writeln('Informe o novo nome ou redigite o anterior (', p^.nome, '):');
           readln(p^.nome);
-          writeln('Informe o novo telefone ou redigite o antigo (', p^.telefone, '):');
+          writeln('Informe o novo telefone ou redigite o anterior (', p^.telefone, '):');
           readln(p^.telefone);
           alterar := 'Registro alterado com sucesso!';
         end
@@ -93,7 +93,7 @@ begin
       writeln('Registro ', i, ':');
       writeln('Nome: ', p^.nome);
       writeln('Telefone: ', p^.telefone);
-      writeln();
+      writeln('');
       listar := listar(p^.next, i + 1);
     end
   else
@@ -116,18 +116,22 @@ begin
           writeln('Registro encontrado:');
           writeln('Nome: ', p^.nome);
           writeln('Telefone: ', p^.telefone);
-          writeln();
+          writeln('');
           ocorrencias := ocorrencias + 1;
         end;
       pesquisar := pesquisar(p^.next, part, ocorrencias);
     end
   else
-    if ocorrencias = 0 then
-      pesquisar := 'Fim da pesquisa. Nenhuma ocorrência encontrada.'
-    else if ocorrencias = 1 then
-      pesquisar := 'Fim da pesquisa. Foi encontrada 1 ocorrência.'
-    else
-      pesquisar := Concat('Fim da pesquisa. Foram encontradas ', IntToStr(ocorrencias), ' ocorrências.');
+    begin
+      if ocorrencias = 0 then
+        writeln('Nenhuma ocorrência encontrada.')
+      else if ocorrencias = 1 then
+        writeln('Foi encontrada 1 ocorrência.')
+      else
+        writeln('Foram encontradas ', ocorrencias, ' ocorrências de nomes contendo "', part, '".');
+
+      pesquisar := 'Fim da pesquisa.';
+    end
 end;
 
 
@@ -143,7 +147,10 @@ begin
       else if qtd = 1 then
         total := 'Há apenas 1 registro cadastrado na lista.'
       else
-        total := Concat('Há ', IntToStr(qtd), ' registros cadastrados na lista.');
+        begin
+          writeln('Há ', qtd, ' registros cadastrados na lista.');
+          total := '';
+        end;
     end;
 end;
 
@@ -159,18 +166,18 @@ begin
 
   clrscr;
   writeln('Bem vindo ao programa de Lista Telefônica.');
-  writeln();
+  writeln('');
 
   menuopt := -1;
   repeat
     if menuopt > -1 then
       clrscr;
 
-    printMenu();
-    writeln();
+    printMenu;
+    writeln('');
     writeln('Escolha sua opção abaixo:');
     readln(menuopt);
-    writeln();
+    writeln('');
 
     ret := '';
     case menuopt OF
@@ -194,11 +201,11 @@ begin
           end;
       4 : begin
             writeln('Listando registros...');
-            writeln();
+            writeln('');
             ret := listar(lista, 1);
           end;
       5 : begin
-            writeln('Digite o nome:');
+            writeln('Digite o nome ou parte:');
             readln(nome);
             ret := pesquisar(lista, nome, 0);
           end;
@@ -216,7 +223,7 @@ begin
 
     if menuopt <> 0 then
       begin
-        writeln();
+        writeln('');
         writeln('Digite qualquer tecla para voltar ao menu inicial.');
         readkey;
       end;
