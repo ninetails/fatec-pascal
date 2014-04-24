@@ -3,6 +3,12 @@ uses crt;
 
 {
   Programa Lista Telefônica
+
+  Nome: Carlos Kazuo Mochizuki Ishizaka - 12100152
+  Nome: David Cechini - 
+
+  Obs: Acentos foram removidos de mensagens de saída para não imprimir
+       caracteres indesejáveis caso compilar via TurboPascal.
 }
 
 {
@@ -22,6 +28,15 @@ type
 
 
 
+{
+  Função utilizada para converter inteiro pra string.
+
+  Parâmetros:
+    I - Integer - inteiro a ser convertido
+
+  Retorno:
+    String - inteiro convertido em string
+}
 function IntToStr(I:Integer):String;
 var
   S:String;
@@ -59,7 +74,7 @@ begin
       p^.telefone := telefone;
       p^.prox := nil;
 
-      inserir := 'Número inserido com sucesso.';
+      inserir := 'Numero inserido com sucesso.';
     end;
 end;
 
@@ -99,7 +114,7 @@ begin
     end
   else
     { chegou no último registro sem encontrar o nome buscado }
-    remover := 'Registro não encontrado.';
+    remover := 'Registro nao encontrado.';
 end;
 
 
@@ -136,7 +151,7 @@ begin
     end
   else
     { chegou no último registro sem encontrar o nome buscado }
-    alterar := 'Registro não encontrado.';
+    alterar := 'Registro nao encontrado.';
 end;
 
 
@@ -201,7 +216,7 @@ begin
         begin
 
           { imprimindo registro }
-          writeln('Registro encontrado:');
+          writeln('Ocorrencia ', ocorrencias, ':');
           writeln('Nome: ', p^.nome);
           writeln('Telefone: ', p^.telefone);
           writeln('');
@@ -217,11 +232,15 @@ begin
 
       { mostrar no final da listagem quantas ocorrências foram encontradas }
       if ocorrencias = 0 then
-        pesquisar := 'Fim da pesquisa. Nenhuma ocorrência encontrada.'
+        pesquisar := 'Fim da pesquisa. Nenhuma ocorrencia encontrada.'
       else if ocorrencias = 1 then
-        pesquisar := 'Fim da pesquisa. Foi encontrada 1 ocorrência.'
+        pesquisar := 'Fim da pesquisa. Foi encontrada 1 ocorrencia.'
       else
-        pesquisar := Concat('Fim da Pesquisa. Foram encontradas ', IntToStr(ocorrencias), ' ocorrências de nomes contendo "', part, '".');
+        pesquisar := Concat('Fim da Pesquisa. Foram encontradas ',
+                            IntToStr(ocorrencias),
+                            ' ocorrencias de nomes contendo "',
+                            part,
+                            '".');
 
     end
 end;
@@ -247,10 +266,10 @@ begin
       if qtd = 0 then
         total := 'Lista vazia.'
       else if qtd = 1 then
-        total := 'Há apenas 1 registro cadastrado na lista.'
+        total := 'Ha apenas 1 registro cadastrado na lista.'
       else
         begin
-          total := Concat('Há ', IntToStr(qtd), ' registros cadastrados na lista.');
+          total := Concat('Ha ', IntToStr(qtd), ' registros cadastrados na lista.');
         end;
     end;
 end;
@@ -268,7 +287,7 @@ begin
 
   { Banner }
   clrscr;
-  writeln('Bem vindo ao programa de Lista Telefônica.');
+  writeln('Bem vindo ao programa de Lista Telefonica.');
   writeln('');
 
   menuopt := -1;
@@ -287,7 +306,7 @@ begin
     writeln('6) Quantidade de Registros');
     writeln('0) Sair');
     writeln('');
-    writeln('Escolha sua opção abaixo:');
+    writeln('Escolha sua opcao abaixo:');
     readln(menuopt);
     writeln('');
 
@@ -332,7 +351,7 @@ begin
             ret := total(l, 0);
           end;
       { Mostrar erro caso nenhuma opção for escolhida }
-      else writeln('Opção inválida.');
+      else writeln('Opcao invalida.');
     end;
 
     { Se o retorno não for vazio, mostrar a mensagem }
