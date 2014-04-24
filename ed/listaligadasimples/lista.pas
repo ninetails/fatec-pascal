@@ -1,5 +1,9 @@
-program lls1;
+program lista;
 uses crt;
+
+{
+  Programa Lista Telefônica
+}
 
 {
   Cada registro telefônico segue a estrutura de tipo
@@ -18,20 +22,12 @@ type
 
 
 
-{
-  Procedure para imprimir o menu ao usuário
-}
-procedure printMenu;
+function IntToStr(I:Integer):String;
+var
+  S:String;
 begin
-  writeln('==================================================');
-  writeln('MENU PRINCIPAL');
-  writeln('1) Inserir');
-  writeln('2) Remover');
-  writeln('3) Alterar');
-  writeln('4) Listar');
-  writeln('5) Pesquisar');
-  writeln('6) Quantidade de Registros');
-  writeln('0) Sair');
+  Str(I, S);
+  IntToStr := S;
 end;
 
 
@@ -52,9 +48,12 @@ end;
 function inserir(var p:tPtRegistro; nome:String; telefone:Integer):String;
 begin
   if p <> nil then
+    { se registro não for nulo, acessar próximo }
     inserir := inserir(p^.prox, nome, telefone)
   else
     begin
+
+      { inserir quando o registro atual for nil }
       new(p);
       p^.nome := nome;
       p^.telefone := telefone;
@@ -86,15 +85,20 @@ begin
     begin
       if p^.nome = nome then
         begin
+
+          { rotina para remoção de registro }
           reg := p;
           p := p^.prox;
           dispose(reg);
+
           remover := 'Registro removido com sucesso!';
         end
       else
+        { se o nome não for encontrado, acessar o próximo }
         remover := remover(p^.prox, nome);
     end
   else
+    { chegou no último registro sem encontrar o nome buscado }
     remover := 'Registro não encontrado.';
 end;
 
@@ -117,16 +121,21 @@ begin
     begin
       if p^.nome = nome then
         begin
+
+          { nome encontrado. tela de alteração e escreve direto na variável }
           writeln('Informe o novo nome ou redigite o anterior (', p^.nome, '):');
           readln(p^.nome);
           writeln('Informe o novo telefone ou redigite o anterior (', p^.telefone, '):');
           readln(p^.telefone);
+
           alterar := 'Registro alterado com sucesso!';
         end
       else
+        { se o nome não for encontrado, acessar o próximo }
         alterar := alterar(p^.prox, nome);
     end
   else
+    { chegou no último registro sem encontrar o nome buscado }
     alterar := 'Registro não encontrado.';
 end;
 
@@ -147,17 +156,23 @@ function listar(p:tPtRegistro; i:Integer):String;
 begin
   if p <> nil then
     begin
+
+      { impressão de cada registro }
       writeln('Registro ', i, ':');
       writeln('Nome: ', p^.nome);
       writeln('Telefone: ', p^.telefone);
       writeln('');
+
+      { acessar o próximo }
       listar := listar(p^.prox, i + 1);
     end
   else
     begin
       if i = 1 then
+        { se o item for vazio e é o primeiro ítem, a lista está vazia }
         listar := 'Lista vazia.'
       else
+        { senão informar final da listagem }
         listar := 'Fim da lista.'
     end;
 end;
@@ -180,26 +195,34 @@ function pesquisar(var p:tPtRegistro; part:String; ocorrencias:Integer):String;
 begin
   if p <> nil then
     begin
+
+      { se parte da string for encontrada, imprimir }
       if Pos(part, p^.nome) > 0 then
         begin
+
+          { imprimindo registro }
           writeln('Registro encontrado:');
           writeln('Nome: ', p^.nome);
           writeln('Telefone: ', p^.telefone);
           writeln('');
+
           ocorrencias := ocorrencias + 1;
         end;
+
+      { partir pro próximo registro }
       pesquisar := pesquisar(p^.prox, part, ocorrencias);
     end
   else
     begin
-      if ocorrencias = 0 then
-        writeln('Nenhuma ocorrência encontrada.')
-      else if ocorrencias = 1 then
-        writeln('Foi encontrada 1 ocorrência.')
-      else
-        writeln('Foram encontradas ', ocorrencias, ' ocorrências de nomes contendo "', part, '".');
 
-      pesquisar := 'Fim da pesquisa.';
+      { mostrar no final da listagem quantas ocorrências foram encontradas }
+      if ocorrencias = 0 then
+        pesquisar := 'Fim da pesquisa. Nenhuma ocorrência encontrada.'
+      else if ocorrencias = 1 then
+        pesquisar := 'Fim da pesquisa. Foi encontrada 1 ocorrência.'
+      else
+        pesquisar := Concat('Fim da Pesquisa. Foram encontradas ', IntToStr(ocorrencias), ' ocorrências de nomes contendo "', part, '".');
+
     end
 end;
 
@@ -215,17 +238,19 @@ end;
 function total(var p:tPtRegistro; qtd:Integer):String;
 begin
   if p <> nil then
+    { enquanto registro não for vazio, acessar próximo e incrementar quantidade }
     total := total(p^.prox, qtd + 1)
   else
     begin
+
+      { chegou ao fim da lista. mostra quantos cadastros existem }
       if qtd = 0 then
         total := 'Lista vazia.'
       else if qtd = 1 then
         total := 'Há apenas 1 registro cadastrado na lista.'
       else
         begin
-          writeln('Há ', qtd, ' registros cadastrados na lista.');
-          total := '';
+          total := Concat('Há ', IntToStr(qtd), ' registros cadastrados na lista.');
         end;
     end;
 end;
@@ -234,12 +259,12 @@ end;
 
 { Programa principal }
 var
-  lista:tPtRegistro;
+  l:tPtRegistro;
   menuopt, telefone:Integer;
   ret:String;
   nome:String[10];
 begin
-  lista := nil;
+  l := nil;
 
   { Banner }
   clrscr;
@@ -252,7 +277,15 @@ begin
       clrscr;
 
     { Imprime menu e habilita ao usuário a escolha das opções }
-    printMenu;
+    writeln('==================================================');
+    writeln('MENU PRINCIPAL');
+    writeln('1) Inserir');
+    writeln('2) Remover');
+    writeln('3) Alterar');
+    writeln('4) Listar');
+    writeln('5) Pesquisar');
+    writeln('6) Quantidade de Registros');
+    writeln('0) Sair');
     writeln('');
     writeln('Escolha sua opção abaixo:');
     readln(menuopt);
@@ -268,35 +301,35 @@ begin
             readln(nome);
             writeln('Digite o telefone:');
             readln(telefone);
-            ret := inserir(lista, nome, telefone);
+            ret := inserir(l, nome, telefone);
           end;
       { Opção 2: remover }
       2 : begin
             writeln('Digite o nome:');
             readln(nome);
-            ret := remover(lista, nome);
+            ret := remover(l, nome);
           end;
       { Opção 3: alterar }
       3 : begin
             writeln('Digite o nome:');
             readln(nome);
-            ret := alterar(lista, nome);
+            ret := alterar(l, nome);
           end;
       { Opção 4: listar registros }
       4 : begin
             writeln('Listando registros...');
             writeln('');
-            ret := listar(lista, 1);
+            ret := listar(l, 1);
           end;
       { Opção 5: pesquisar }
       5 : begin
             writeln('Digite o nome ou parte:');
             readln(nome);
-            ret := pesquisar(lista, nome, 0);
+            ret := pesquisar(l, nome, 0);
           end;
       { Opção 6: total de registros }
       6 : begin
-            ret := total(lista, 0);
+            ret := total(l, 0);
           end;
       { Mostrar erro caso nenhuma opção for escolhida }
       else writeln('Opção inválida.');
